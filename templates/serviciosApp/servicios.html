@@ -11,7 +11,7 @@
     </div>
     <div class="row g-4">
         {% for servicio in servicios %}
-            <div class="col-md-6 col-lg-4 reveal" style="--d: {{ forloop.counter }}">
+            <div class="col-md-6 col-lg-4 reveal" data-d="{{ forloop.counter }}">
                 <article class="info-card spotlight h-100 d-flex flex-column">
                     <div class="card-icon">✦</div>
                     <h2>{{ servicio.nombre }}</h2>

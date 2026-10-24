@@ -11,7 +11,7 @@
                 <h1 data-blur-text>Contacta con RETAIL</h1>
                 <p class="reveal">Cuéntanos qué necesitas y nos pondremos en contacto contigo.</p>
             </div>
-            <form method="post" class="panel-card spotlight reveal" style="--d: 2" novalidate>
+            <form method="post" class="panel-card spotlight reveal" data-d="2" novalidate>
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 {% for field in form %}

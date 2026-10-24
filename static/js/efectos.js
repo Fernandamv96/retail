@@ -5,6 +5,11 @@
 
     var sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // data-d="3" → retraso escalonado de la animación de entrada (sin estilos inline, por la CSP).
+    document.querySelectorAll('[data-d]').forEach(function (el) {
+        el.style.setProperty('--d', el.dataset.d);
+    });
+
     // BlurText: divide el texto en palabras que aparecen desde el desenfoque.
     document.querySelectorAll('[data-blur-text]').forEach(function (el) {
         var palabras = el.textContent.trim().split(/\s+/);

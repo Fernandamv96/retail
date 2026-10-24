@@ -10,18 +10,18 @@
                 <div class="col-lg-7">
                     <p class="eyebrow"><span class="shiny-text">Plataforma de comercio electrónico</span></p>
                     <h1 class="display-3 fw-bold" data-blur-text>Gestiona tu negocio con claridad.</h1>
-                    <p class="lead mt-4 reveal" style="--d: 6">Servicios, productos y atención al cliente en un solo espacio. Crea, edita y elimina tu catálogo en segundos.</p>
-                    <div class="d-flex gap-3 flex-wrap mt-4 reveal" style="--d: 8">
+                    <p class="lead mt-4 reveal" data-d="6">Servicios, productos y atención al cliente en un solo espacio. Crea, edita y elimina tu catálogo en segundos.</p>
+                    <div class="d-flex gap-3 flex-wrap mt-4 reveal" data-d="8">
                         <span class="star-border"><a class="btn btn-dark-fill btn-lg" href="{% url 'tiendaApp:panel' %}">Abrir panel de gestión</a></span>
                         <a class="btn btn-ghost btn-lg" href="{% url 'tiendaApp:servicios' %}">Ver servicios</a>
                     </div>
-                    <div class="stat-row reveal" style="--d: 10">
+                    <div class="stat-row reveal" data-d="10">
                         <div class="stat"><strong class="gradient-text" data-count-up="{{ data.total_servicios }}">{{ data.total_servicios }}</strong><span>Servicios activos</span></div>
                         <div class="stat"><strong class="gradient-text" data-count-up="{{ data.total_productos }}">{{ data.total_productos }}</strong><span>Productos activos</span></div>
                         <div class="stat"><strong class="gradient-text">24/7</strong><span>API disponible</span></div>
                     </div>
                 </div>
-                <div class="col-lg-5 text-center reveal" style="--d: 4">
+                <div class="col-lg-5 text-center reveal" data-d="4">
                     <div class="hero-orb" aria-hidden="true">
                         <div class="hero-emblem">R</div>
                     </div>

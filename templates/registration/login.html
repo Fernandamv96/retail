@@ -11,10 +11,12 @@
                 <h1 class="fs-1" data-blur-text>Bienvenido de vuelta</h1>
                 <p class="reveal mx-auto">Ingresa para gestionar servicios y productos.</p>
             </div>
-            <form method="post" class="panel-card spotlight reveal" style="--d: 2" novalidate>
+            <form method="post" class="panel-card spotlight reveal" data-d="2" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
-                {% if form.non_field_errors %}
+                {% if bloqueado %}
+                    <div class="errorlist">Demasiados intentos fallidos. Espera 15 minutos antes de volver a intentarlo.</div>
+                {% elif form.non_field_errors %}
                     <div class="errorlist">Usuario o contraseña incorrectos. Inténtalo de nuevo.</div>
                 {% endif %}
                 {% for field in form %}

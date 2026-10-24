@@ -1,2 +1,7 @@
 Django>=6.1,<6.2
 djangorestframework>=3.18,<3.19
+whitenoise>=6.9
+dj-database-url>=2.3
+# Conector de PostgreSQL (Neon). Solo hace falta en el servidor (Vercel, Linux);
+# en local se usa SQLite y no tiene versión para Python free-threaded.
+psycopg[binary]>=3.2; sys_platform == "linux"

@@ -27,3 +27,20 @@ class Producto(models.Model):
 
 	def __str__(self):
 		return self.nombre
+
+
+class MensajeContacto(models.Model):
+	nombre = models.CharField(max_length=100)
+	email = models.EmailField()
+	asunto = models.CharField(max_length=150)
+	mensaje = models.TextField()
+	recibido = models.DateTimeField(auto_now_add=True)
+	leido = models.BooleanField(default=False)
+
+	class Meta:
+		ordering = ['-recibido']
+		verbose_name = 'mensaje de contacto'
+		verbose_name_plural = 'mensajes de contacto'
+
+	def __str__(self):
+		return f'{self.asunto} ({self.email})'

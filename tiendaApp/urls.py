@@ -3,7 +3,6 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from . import views
-from .forms import LoginForm
 
 app_name = 'tiendaApp'
 
@@ -19,7 +18,7 @@ urlpatterns = [
     path('precios/', views.precios, name='precios'),
     path('productos/', views.productos, name='productos'),
     path('contacto/', views.contacto, name='contacto'),
-    path('ingresar/', auth_views.LoginView.as_view(template_name='registration/login.html', authentication_form=LoginForm, redirect_authenticated_user=True), name='login'),
+    path('ingresar/', views.IngresoView.as_view(), name='login'),
     path('salir/', auth_views.LogoutView.as_view(), name='logout'),
     path('gestion/', views.panel, name='panel'),
     path('gestion/servicios/', views.gestion_servicios, name='gestion_servicios'),

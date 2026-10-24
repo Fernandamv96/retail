@@ -18,14 +18,14 @@
     {% include 'gestion/_tabs.html' %}
 
     <div class="row g-4 mb-4">
-        <div class="col-6 col-lg-3 reveal" style="--d: 1"><div class="panel-card spotlight kpi h-100"><span>Servicios</span><strong class="gradient-text" data-count-up="{{ total_servicios }}">{{ total_servicios }}</strong></div></div>
-        <div class="col-6 col-lg-3 reveal" style="--d: 2"><div class="panel-card spotlight kpi h-100"><span>Productos</span><strong class="gradient-text" data-count-up="{{ total_productos }}">{{ total_productos }}</strong></div></div>
-        <div class="col-6 col-lg-3 reveal" style="--d: 3"><div class="panel-card spotlight kpi h-100"><span>Unidades en stock</span><strong data-count-up="{{ stock_total }}">{{ stock_total }}</strong></div></div>
-        <div class="col-6 col-lg-3 reveal" style="--d: 4"><div class="panel-card spotlight kpi h-100"><span>Sin stock</span><strong class="{% if sin_stock %}text-warning{% endif %}" data-count-up="{{ sin_stock }}">{{ sin_stock }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" data-d="1"><div class="panel-card spotlight kpi h-100"><span>Servicios</span><strong class="gradient-text" data-count-up="{{ total_servicios }}">{{ total_servicios }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" data-d="2"><div class="panel-card spotlight kpi h-100"><span>Productos</span><strong class="gradient-text" data-count-up="{{ total_productos }}">{{ total_productos }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" data-d="3"><div class="panel-card spotlight kpi h-100"><span>Unidades en stock</span><strong data-count-up="{{ stock_total }}">{{ stock_total }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" data-d="4"><div class="panel-card spotlight kpi h-100"><span>Sin stock</span><strong class="{% if sin_stock %}text-warning{% endif %}" data-count-up="{{ sin_stock }}">{{ sin_stock }}</strong></div></div>
     </div>
 
     <div class="row g-4">
-        <div class="col-lg-6 reveal" style="--d: 5">
+        <div class="col-lg-6 reveal" data-d="5">
             <section class="panel-card spotlight h-100">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="mb-0">Últimos servicios</h2>
@@ -40,7 +40,7 @@
                 </ul>
             </section>
         </div>
-        <div class="col-lg-6 reveal" style="--d: 6">
+        <div class="col-lg-6 reveal" data-d="6">
             <section class="panel-card spotlight h-100">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h2 class="mb-0">Últimos productos</h2>

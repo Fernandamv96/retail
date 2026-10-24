@@ -11,8 +11,16 @@ db.sqlite3
 staticfiles/
 media/
 
-# Variables de entorno
+# Variables de entorno (solo se sube la plantilla)
 .env
+.env.*
+!.env.example
+
+# Vercel y herramientas que agrega su integración con Neon
+.vercel/
+.agents/
+.claude/
+skills-lock.json
 
 # Editor y sistema
 .vscode/

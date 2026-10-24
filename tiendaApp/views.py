@@ -1,12 +1,15 @@
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework import permissions, viewsets
 
-from .forms import ContactoForm, ProductoForm, ServicioForm
-from .models import Producto, Servicio
+from .forms import ContactoForm, LoginForm, ProductoForm, ServicioForm
+from .models import MensajeContacto, Producto, Servicio
 from .serializers import ServicioSerializer
 
 
@@ -41,12 +44,16 @@ def detalle_servicio(request, servicio_id):
 def contacto(request):
 	form = ContactoForm(request.POST or None)
 	if request.method == 'POST' and form.is_valid():
-		send_mail(
-			f"Contacto RETAIL: {form.cleaned_data['asunto']}",
-			form.cleaned_data['mensaje'],
-			form.cleaned_data['email'],
-			['admin@retail.local'],
-		)
+		# Se guarda siempre (se revisa en /admin/) y se envía por correo solo si hay SMTP configurado.
+		MensajeContacto.objects.create(**form.cleaned_data)
+		if settings.CORREO_CONTACTO:
+			send_mail(
+				f"Contacto RETAIL: {form.cleaned_data['asunto']}",
+				f"De: {form.cleaned_data['nombre']} <{form.cleaned_data['email']}>\n\n{form.cleaned_data['mensaje']}",
+				None,
+				[settings.CORREO_CONTACTO],
+				fail_silently=True,
+			)
 		messages.success(request, 'Tu mensaje se ha enviado correctamente.')
 		return redirect('tiendaApp:contacto')
 	return render(request, 'tiendaApp/contacto.html', {'form': form})
@@ -59,6 +66,40 @@ def precios(request):
 def productos(request):
 	productos_activos = Producto.objects.filter(activo=True)
 	return render(request, 'tiendaApp/productos.html', {'productos': productos_activos})
+
+
+# ---------- INGRESO ------------------------------------------------
+
+MAX_INTENTOS = 5           # intentos fallidos permitidos por IP y usuario
+BLOQUEO_SEGUNDOS = 15 * 60  # tiempo de espera al superar el límite
+
+
+def _ip_cliente(request):
+	# En Vercel la IP real llega en X-Forwarded-For (Vercel la sobrescribe, no se puede falsificar).
+	if settings.EN_VERCEL and request.META.get('HTTP_X_FORWARDED_FOR'):
+		return request.META['HTTP_X_FORWARDED_FOR'].split(',')[0].strip()
+	return request.META.get('REMOTE_ADDR', '')
+
+
+class IngresoView(auth_views.LoginView):
+	"""Login de Django con límite de intentos fallidos para frenar ataques de fuerza bruta."""
+	template_name = 'registration/login.html'
+	authentication_form = LoginForm
+	redirect_authenticated_user = True
+
+	def post(self, request, *args, **kwargs):
+		usuario = request.POST.get('username', '').strip().lower()
+		clave = f'login-fallido:{_ip_cliente(request)}:{usuario}'
+		if cache.get(clave, 0) >= MAX_INTENTOS:
+			contexto = self.get_context_data(form=self.get_form(), bloqueado=True)
+			return self.render_to_response(contexto, status=429)
+
+		respuesta = super().post(request, *args, **kwargs)
+		if respuesta.status_code == 302:
+			cache.delete(clave)
+		else:
+			cache.set(clave, cache.get(clave, 0) + 1, BLOQUEO_SEGUNDOS)
+		return respuesta
 
 
 # ---------- GESTIÓN (CRUD) ----------------------------------------

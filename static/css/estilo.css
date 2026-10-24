@@ -562,6 +562,12 @@ a {
     place-items: center;
 }
 
+.card-icon-danger {
+    color: var(--danger);
+    background: rgba(248, 113, 113, 0.1);
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
 .card-link {
     display: block;
     height: 100%;

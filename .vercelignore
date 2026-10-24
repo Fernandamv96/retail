@@ -1,0 +1,11 @@
+venv/
+.venv/
+db.sqlite3
+staticfiles/
+__pycache__
+.env
+.env.*
+.github/
+.agents/
+.claude/
+skills-lock.json

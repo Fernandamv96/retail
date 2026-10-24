@@ -1,11 +1,12 @@
 from io import StringIO
 
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Producto, Servicio
+from .models import MensajeContacto, Producto, Servicio
 
 
 class RetailViewsTests(TestCase):
@@ -44,6 +45,16 @@ class RetailViewsTests(TestCase):
 
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Enviar mensaje')
+
+	def test_contacto_guarda_el_mensaje(self):
+		response = self.client.post('/contacto/', {
+			'nombre': 'Ana',
+			'email': 'ana@example.com',
+			'asunto': 'Cotización',
+			'mensaje': 'Quiero una consultoría.',
+		})
+		self.assertRedirects(response, '/contacto/')
+		self.assertTrue(MensajeContacto.objects.filter(email='ana@example.com', asunto='Cotización').exists())
 
 	def test_api_no_permite_crear_sin_sesion(self):
 		response = self.client.post('/api/servicios/', {'nombre': 'X'}, content_type='application/json')
@@ -162,3 +173,32 @@ class CargarDemoTests(TestCase):
 		self.assertIn('0 registros nuevos', salida.getvalue())
 		self.assertEqual(Servicio.objects.count(), 3)
 		self.assertEqual(Producto.objects.count(), 3)
+
+
+class SeguridadTests(TestCase):
+	def setUp(self):
+		cache.clear()
+		User.objects.create_user('admin', password='clave-segura-123')
+
+	def test_login_se_bloquea_tras_cinco_intentos_fallidos(self):
+		url = reverse('tiendaApp:login')
+		for _ in range(5):
+			self.client.post(url, {'username': 'admin', 'password': 'mala'})
+
+		response = self.client.post(url, {'username': 'admin', 'password': 'clave-segura-123'})
+		self.assertEqual(response.status_code, 429)
+		self.assertContains(response, 'Demasiados intentos fallidos', status_code=429)
+
+	def test_login_correcto_reinicia_el_contador(self):
+		url = reverse('tiendaApp:login')
+		for _ in range(4):
+			self.client.post(url, {'username': 'admin', 'password': 'mala'})
+		response = self.client.post(url, {'username': 'admin', 'password': 'clave-segura-123'})
+		self.assertRedirects(response, reverse('tiendaApp:panel'))
+
+	def test_cabeceras_de_seguridad(self):
+		response = self.client.get(reverse('tiendaApp:inicio'))
+		self.assertIn("script-src 'self'", response['Content-Security-Policy'])
+		self.assertEqual(response['X-Frame-Options'], 'DENY')
+		self.assertEqual(response['X-Content-Type-Options'], 'nosniff')
+		self.assertNotIn('<script>', response.content.decode())
