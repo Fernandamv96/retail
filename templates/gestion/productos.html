@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de productos | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="page-header mb-4">
+        <p class="eyebrow"><span class="shiny-text">Gestión</span></p>
+        <h1 data-blur-text>Productos</h1>
+    </div>
+
+    {% include 'gestion/_tabs.html' %}
+
+    <div class="toolbar">
+        <form method="get" class="search-box" role="search">
+            <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre…" aria-label="Buscar productos">
+        </form>
+        <span class="star-border"><a class="btn btn-dark-fill" href="{% url 'tiendaApp:crear_producto' %}">+ Agregar producto</a></span>
+    </div>
+
+    <div class="panel-card p-0 reveal">
+        {% if productos %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                        <tr>
+                            <td data-label="#">{{ forloop.counter }}</td>
+                            <td data-label="Producto">
+                                <div>
+                                    <span class="nombre">{{ producto.nombre }}</span>
+                                    {% if producto.descripcion %}<span class="sub">{{ producto.descripcion }}</span>{% endif %}
+                                </div>
+                            </td>
+                            <td data-label="Precio">$ {{ producto.precio|floatformat:"0g" }}</td>
+                            <td data-label="Stock">
+                                {% if producto.stock == 0 %}<span class="tag tag-danger">Agotado</span>
+                                {% elif producto.stock < 5 %}<span class="tag tag-warn">{{ producto.stock }} u.</span>
+                                {% else %}{{ producto.stock }} u.{% endif %}
+                            </td>
+                            <td data-label="Estado">
+                                {% if producto.activo %}<span class="tag tag-ok">Visible</span>{% else %}<span class="tag tag-off">Oculto</span>{% endif %}
+                            </td>
+                            <td>
+                                <div class="acciones">
+                                    <a class="btn btn-ghost btn-sm" href="{% url 'tiendaApp:editar_producto' producto.id %}">Modificar</a>
+                                    <a class="btn btn-outline-danger btn-sm" href="{% url 'tiendaApp:eliminar_producto' producto.id %}">Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <div class="card-icon">▣</div>
+                {% if q %}
+                    <h2>Sin resultados para «{{ q }}»</h2>
+                    <p>Prueba con otro nombre o <a href="{% url 'tiendaApp:gestion_productos' %}">limpia la búsqueda</a>.</p>
+                {% else %}
+                    <h2>Aún no hay productos</h2>
+                    <p>Agrega tu primer producto con su precio y stock.</p>
+                    <a class="btn btn-primary" href="{% url 'tiendaApp:crear_producto' %}">+ Agregar producto</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

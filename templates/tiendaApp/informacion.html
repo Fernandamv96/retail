@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Información | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="page-header mb-5">
+        <p class="eyebrow"><span class="shiny-text">Sobre la plataforma</span></p>
+        <h1 data-blur-text>Información</h1>
+        <p class="reveal">Una plataforma clara para gestionar la relación con tus clientes.</p>
+    </div>
+    <div class="row g-4">
+        <article class="col-md-4 reveal" style="--d: 1"><div class="info-card spotlight h-100"><div class="card-icon">◎</div><h2>Objetivo</h2><p>Centralizar servicios, precios y consultas en una experiencia sencilla.</p></div></article>
+        <article class="col-md-4 reveal" style="--d: 2"><div class="info-card spotlight h-100"><div class="card-icon">⚙</div><h2>Funcionalidad</h2><p>Administra el catálogo desde el panel de gestión y consúmelo también mediante API REST.</p></div></article>
+        <article class="col-md-4 reveal" style="--d: 3"><div class="info-card spotlight h-100"><div class="card-icon">↗</div><h2>Escalable</h2><p>La estructura permite sumar productos, inventario y nuevos canales de atención.</p></div></article>
+    </div>
+</main>
+{% endblock %}

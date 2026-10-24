@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Menú principal | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="page-header mb-5">
+        <p class="eyebrow"><span class="shiny-text">Centro de gestión</span></p>
+        <h1 data-blur-text>Menú principal</h1>
+        <p class="reveal">Accede rápidamente a la información y herramientas de RETAIL.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 1">
+            <a class="card-link" href="{% url 'tiendaApp:panel' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">◆</div><h2>Gestión del catálogo</h2><p>Crea, edita y elimina servicios y productos.</p><span class="btn btn-primary">Abrir panel</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 2">
+            <a class="card-link" href="{% url 'tiendaApp:servicios' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">✦</div><h2>Servicios</h2><p>Consulta las soluciones disponibles y revisa su detalle.</p><span class="btn btn-outline-primary">Ver servicios</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 3">
+            <a class="card-link" href="{% url 'tiendaApp:productos' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">▣</div><h2>Productos</h2><p>Revisa el catálogo de equipamiento y su disponibilidad.</p><span class="btn btn-outline-primary">Ver productos</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 3">
+            <a class="card-link" href="{% url 'tiendaApp:precios' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">$</div><h2>Precios</h2><p>Compara planes y encuentra la opción adecuada para tu negocio.</p><span class="btn btn-outline-primary">Consultar precios</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 4">
+            <a class="card-link" href="{% url 'tiendaApp:informacion' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">i</div><h2>Información</h2><p>Conoce el propósito y las capacidades de la plataforma.</p><span class="btn btn-outline-primary">Saber más</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 5">
+            <a class="card-link" href="{% url 'tiendaApp:contacto' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">✉</div><h2>Contacto</h2><p>Envía una consulta directamente a nuestro equipo.</p><span class="btn btn-outline-primary">Escribirnos</span></article>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4 reveal" style="--d: 6">
+            <a class="card-link" href="{% url 'tiendaApp:servicio-api-list' %}">
+                <article class="info-card spotlight h-100"><div class="card-icon">{ }</div><h2>API de servicios</h2><p>Consulta la colección de servicios en formato JSON.</p><span class="btn btn-ghost">Abrir API</span></article>
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

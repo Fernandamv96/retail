@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de gestión | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <div class="page-header">
+            <p class="eyebrow"><span class="shiny-text">Panel de gestión</span></p>
+            <h1 data-blur-text>Tu catálogo, en un solo lugar.</h1>
+        </div>
+        <div class="d-flex gap-2 flex-wrap reveal">
+            <span class="star-border"><a class="btn btn-dark-fill" href="{% url 'tiendaApp:crear_servicio' %}">+ Nuevo servicio</a></span>
+            <a class="btn btn-primary" href="{% url 'tiendaApp:crear_producto' %}">+ Nuevo producto</a>
+        </div>
+    </div>
+
+    {% include 'gestion/_tabs.html' %}
+
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-lg-3 reveal" style="--d: 1"><div class="panel-card spotlight kpi h-100"><span>Servicios</span><strong class="gradient-text" data-count-up="{{ total_servicios }}">{{ total_servicios }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" style="--d: 2"><div class="panel-card spotlight kpi h-100"><span>Productos</span><strong class="gradient-text" data-count-up="{{ total_productos }}">{{ total_productos }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" style="--d: 3"><div class="panel-card spotlight kpi h-100"><span>Unidades en stock</span><strong data-count-up="{{ stock_total }}">{{ stock_total }}</strong></div></div>
+        <div class="col-6 col-lg-3 reveal" style="--d: 4"><div class="panel-card spotlight kpi h-100"><span>Sin stock</span><strong class="{% if sin_stock %}text-warning{% endif %}" data-count-up="{{ sin_stock }}">{{ sin_stock }}</strong></div></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6 reveal" style="--d: 5">
+            <section class="panel-card spotlight h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="mb-0">Últimos servicios</h2>
+                    <a href="{% url 'tiendaApp:gestion_servicios' %}">Ver todos →</a>
+                </div>
+                <ul class="mini-list">
+                    {% for servicio in ultimos_servicios %}
+                        <li><a href="{% url 'tiendaApp:editar_servicio' servicio.id %}">{{ servicio.nombre }}</a><span>$ {{ servicio.precio|floatformat:"0g" }}</span></li>
+                    {% empty %}
+                        <li><span>Aún no hay servicios.</span><a href="{% url 'tiendaApp:crear_servicio' %}">Crear el primero</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+        <div class="col-lg-6 reveal" style="--d: 6">
+            <section class="panel-card spotlight h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="mb-0">Últimos productos</h2>
+                    <a href="{% url 'tiendaApp:gestion_productos' %}">Ver todos →</a>
+                </div>
+                <ul class="mini-list">
+                    {% for producto in ultimos_productos %}
+                        <li><a href="{% url 'tiendaApp:editar_producto' producto.id %}">{{ producto.nombre }}</a><span>{{ producto.stock }} u. · $ {{ producto.precio|floatformat:"0g" }}</span></li>
+                    {% empty %}
+                        <li><span>Aún no hay productos.</span><a href="{% url 'tiendaApp:crear_producto' %}">Crear el primero</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}

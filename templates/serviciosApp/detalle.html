@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ servicio.nombre }} | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <a class="btn btn-ghost btn-sm mb-4" href="{% url 'tiendaApp:servicios' %}">← Volver a servicios</a>
+    <article class="panel-card spotlight p-4 p-md-5 reveal">
+        <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+            <div>
+                <p class="eyebrow"><span class="shiny-text">Servicio RETAIL</span></p>
+                <h1 data-blur-text>{{ servicio.nombre }}</h1>
+            </div>
+            <span class="tag tag-ok">Disponible</span>
+        </div>
+        <p class="lead mt-4">{{ servicio.descripcion }}</p>
+        <div class="row g-3 mt-2 mb-4">
+            <div class="col-sm-6"><div class="kpi"><span>Precio</span><strong class="gradient-text">$ {{ servicio.precio|floatformat:"0g" }}</strong></div></div>
+            <div class="col-sm-6"><div class="kpi"><span>Disponibilidad</span><strong class="fs-4">{{ servicio.disponibilidad }}</strong></div></div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-primary" href="{% url 'tiendaApp:contacto' %}">Solicitar información</a>
+            {% if user.is_authenticated %}<a class="btn btn-ghost" href="{% url 'tiendaApp:editar_servicio' servicio.id %}">Editar</a>{% endif %}
+        </div>
+    </article>
+</main>
+{% endblock %}

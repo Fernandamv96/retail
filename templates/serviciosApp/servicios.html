@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Servicios | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="page-header mb-5">
+        <p class="eyebrow"><span class="shiny-text">Lo que hacemos</span></p>
+        <h1 data-blur-text>Servicios</h1>
+        <p class="reveal">Soluciones digitales para optimizar la gestión de tu negocio.</p>
+    </div>
+    <div class="row g-4">
+        {% for servicio in servicios %}
+            <div class="col-md-6 col-lg-4 reveal" style="--d: {{ forloop.counter }}">
+                <article class="info-card spotlight h-100 d-flex flex-column">
+                    <div class="card-icon">✦</div>
+                    <h2>{{ servicio.nombre }}</h2>
+                    <p>{{ servicio.descripcion|truncatewords:24 }}</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
+                        <strong class="fs-5">$ {{ servicio.precio|floatformat:"0g" }}</strong>
+                        <a class="btn btn-primary btn-sm" href="{% url 'tiendaApp:detalle_servicio' servicio.id %}">Ver detalle</a>
+                    </div>
+                </article>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="panel-card empty-state">
+                    <div class="card-icon">✦</div>
+                    <h2>Todavía no hay servicios activos</h2>
+                    <p>Vuelve pronto: estamos preparando nuevas soluciones.</p>
+                    {% if user.is_authenticated %}<a class="btn btn-primary" href="{% url 'tiendaApp:crear_servicio' %}">+ Crear servicio</a>{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

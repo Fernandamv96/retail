@@ -1,0 +1,7 @@
+{% with actual=request.resolver_match.url_name %}
+<nav class="gestion-tabs mb-4" aria-label="Secciones de gestión">
+    <a href="{% url 'tiendaApp:panel' %}" class="{% if actual == 'panel' %}active{% endif %}">Resumen</a>
+    <a href="{% url 'tiendaApp:gestion_servicios' %}" class="{% if 'servicio' in actual %}active{% endif %}">Servicios</a>
+    <a href="{% url 'tiendaApp:gestion_productos' %}" class="{% if 'producto' in actual %}active{% endif %}">Productos</a>
+</nav>
+{% endwith %}

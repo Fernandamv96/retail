@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precios</title>
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+</head>
+<body class="page-section">
+    <main class="content-container">
+        <div class="page-header">
+            <h1>Precios</h1>
+            <p>Planes flexibles para cada etapa de tu proyecto.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <article class="price-card">
+                <h2>Básico</h2>
+                <div class="price">$49<span>/mes</span></div>
+                <ul>
+                    <li>1 proyecto</li>
+                    <li>Soporte básico</li>
+                    <li>Actualizaciones</li>
+                </ul>
+            </article>
+
+            <article class="price-card featured">
+                <h2>Profesional</h2>
+                <div class="price">$99<span>/mes</span></div>
+                <ul>
+                    <li>Proyectos ilimitados</li>
+                    <li>Soporte prioritario</li>
+                    <li>Integraciones avanzadas</li>
+                </ul>
+            </article>
+
+            <article class="price-card">
+                <h2>Enterprise</h2>
+                <div class="price">Personalizado</div>
+                <ul>
+                    <li>Solución a medida</li>
+                    <li>Equipo dedicado</li>
+                    <li>Servicios premium</li>
+                </ul>
+            </article>
+        </div>
+
+        <div class="bottom-link">
+            <a href="{% url 'tiendaApp:menu_principal' %}">Volver al menú principal</a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Contacto | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="page-header mb-4">
+                <p class="eyebrow"><span class="shiny-text">Contacto</span></p>
+                <h1 data-blur-text>Contacta con RETAIL</h1>
+                <p class="reveal">Cuéntanos qué necesitas y nos pondremos en contacto contigo.</p>
+            </div>
+            <form method="post" class="panel-card spotlight reveal" style="--d: 2" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit">Enviar mensaje</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

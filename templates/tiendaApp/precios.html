@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Precios | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="page-header mb-5">
+        <p class="eyebrow"><span class="shiny-text">Planes</span></p>
+        <h1 data-blur-text>Precios</h1>
+        <p class="reveal">Planes flexibles para cada etapa de tu proyecto.</p>
+    </div>
+    <div class="row g-4">
+        <article class="col-md-4 reveal" style="--d: 1"><div class="price-card spotlight h-100"><h2>Básico</h2><div class="price">$49<span>/mes</span></div><ul><li>1 proyecto</li><li>Soporte básico</li><li>Actualizaciones</li></ul></div></article>
+        <article class="col-md-4 reveal" style="--d: 2"><div class="price-card spotlight featured h-100"><div class="d-flex justify-content-between align-items-center"><h2 class="mb-0">Profesional</h2><span class="tag tag-ok">Popular</span></div><div class="price"><span class="gradient-text">$99</span><span>/mes</span></div><ul><li>Proyectos ilimitados</li><li>Soporte prioritario</li><li>Integraciones avanzadas</li></ul></div></article>
+        <article class="col-md-4 reveal" style="--d: 3"><div class="price-card spotlight h-100"><h2>Enterprise</h2><div class="price">A medida</div><ul><li>Solución a medida</li><li>Equipo dedicado</li><li>Servicios premium</li></ul></div></article>
+    </div>
+</main>
+{% endblock %}
