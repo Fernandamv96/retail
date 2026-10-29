@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar servicio | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="panel-card spotlight p-4 p-md-5 text-center reveal visible">
+                <div class="card-icon card-icon-danger">!</div>
+                <h1 class="fs-2 mb-3">Confirmar eliminación</h1>
+                <p>¿Seguro que quieres eliminar el servicio <strong class="text-white">«{{ servicio }}»</strong>? Esta acción no se puede deshacer.</p>
+                <form method="post" class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
+                    {% csrf_token %}
+                    <a class="btn btn-ghost" href="{% url 'tiendaApp:gestion_servicios' %}">Cancelar</a>
+                    <button class="btn btn-danger" type="submit">Sí, eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

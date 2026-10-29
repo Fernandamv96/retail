@@ -60,7 +60,7 @@ def contacto(request):
 
 
 def precios(request):
-	return render(request, 'tiendaApp/precios.html')
+	return render(request, 'serviciosApp/precios.html')
 
 
 def productos(request):
@@ -83,7 +83,7 @@ def _ip_cliente(request):
 
 class IngresoView(auth_views.LoginView):
 	"""Login de Django con límite de intentos fallidos para frenar ataques de fuerza bruta."""
-	template_name = 'registration/login.html'
+	template_name = 'serviciosApp/login.html'
 	authentication_form = LoginForm
 	redirect_authenticated_user = True
 
@@ -117,7 +117,7 @@ def panel(request):
 	return render(request, 'gestion/panel.html', data)
 
 
-def _guardar(request, form_class, instancia, contexto, volver):
+def _guardar(request, form_class, instancia, contexto, volver, plantilla='gestion/formulario.html'):
 	"""Crea o modifica un registro con el ModelForm recibido."""
 	form = form_class(request.POST or None, instance=instancia)
 	if request.method == 'POST' and form.is_valid():  # si cumple con las validaciones
@@ -126,17 +126,17 @@ def _guardar(request, form_class, instancia, contexto, volver):
 		messages.success(request, f'«{registro}» se ha {accion} correctamente.')
 		return redirect(volver)
 	contexto.update({'form': form, 'volver': volver, 'editando': instancia is not None})
-	return render(request, 'gestion/formulario.html', contexto)
+	return render(request, plantilla, contexto)
 
 
-def _eliminar(request, registro, tipo, volver):
+def _eliminar(request, registro, tipo, volver, plantilla='gestion/confirmar_eliminar.html'):
 	"""Muestra la confirmación y elimina solo cuando llega un POST."""
 	if request.method == 'POST':
 		nombre = str(registro)
 		registro.delete()
 		messages.success(request, f'«{nombre}» se ha eliminado.')
 		return redirect(volver)
-	return render(request, 'gestion/confirmar_eliminar.html', {'registro': registro, 'tipo': tipo, 'volver': volver})
+	return render(request, plantilla, {'registro': registro, tipo: registro, 'tipo': tipo, 'volver': volver})
 
 
 def _buscar(queryset, request):
@@ -149,26 +149,26 @@ def _buscar(queryset, request):
 @login_required
 def gestion_servicios(request):
 	lista, termino = _buscar(Servicio.objects.all(), request)
-	return render(request, 'gestion/servicios.html', {'servicios': lista, 'q': termino})
+	return render(request, 'serviciosApp/listar.html', {'servicios': lista, 'q': termino})
 
 
 @login_required
 def crear_servicio(request):
 	contexto = {'titulo': 'Nuevo servicio', 'tipo': 'servicio'}
-	return _guardar(request, ServicioForm, None, contexto, 'tiendaApp:gestion_servicios')
+	return _guardar(request, ServicioForm, None, contexto, 'tiendaApp:gestion_servicios', 'serviciosApp/crear.html')
 
 
 @login_required
 def editar_servicio(request, servicio_id):
 	servicio = get_object_or_404(Servicio, id=servicio_id)
-	contexto = {'titulo': f'Editar {servicio.nombre}', 'tipo': 'servicio'}
-	return _guardar(request, ServicioForm, servicio, contexto, 'tiendaApp:gestion_servicios')
+	contexto = {'titulo': f'Editar {servicio.nombre}', 'tipo': 'servicio', 'servicio': servicio}
+	return _guardar(request, ServicioForm, servicio, contexto, 'tiendaApp:gestion_servicios', 'serviciosApp/editar.html')
 
 
 @login_required
 def eliminar_servicio(request, servicio_id):
 	servicio = get_object_or_404(Servicio, id=servicio_id)
-	return _eliminar(request, servicio, 'servicio', 'tiendaApp:gestion_servicios')
+	return _eliminar(request, servicio, 'servicio', 'tiendaApp:gestion_servicios', 'serviciosApp/eliminar.html')
 
 
 @login_required

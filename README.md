@@ -119,7 +119,7 @@ RETAIL/
 │   ├── views.py              # Páginas públicas, CRUD del panel, login con límite
 │   ├── management/commands/  # cargar_demo
 │   └── tests.py              # 18 pruebas
-├── templates/                # base.html, páginas y panel (templates/gestion/)
+├── templates/                # base.html, tiendaApp/, serviciosApp/ (CRUD, login, precios) y gestion/
 ├── static/                   # estilo.css y efectos.js (React Bits en JS puro)
 └── vercel.json
 ```
