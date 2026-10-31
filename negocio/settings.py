@@ -144,11 +144,32 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Fotos de productos subidas desde el panel. En local se guardan en media/.
+# Vercel no conserva archivos subidos: ahí el campo queda oculto hasta configurar un almacenamiento
+# externo (Vercel Blob, Cloudinary o S3) y definir FOTOS_PRODUCTOS=True.
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+FOTOS_PRODUCTOS = os.environ.get('FOTOS_PRODUCTOS', 'False' if EN_VERCEL else 'True') == 'True'
 WHITENOISE_USE_FINDERS = True  # en Vercel sirve los estáticos sin collectstatic
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 RETAIL_NAME = 'RETAIL'
+
+# Ubicación del mapa (inicio y contacto). Google Maps busca la dirección.
+UBICACION_NOMBRE = os.environ.get('UBICACION_NOMBRE', 'INACAP Sede Valparaíso')
+UBICACION_DIRECCION = os.environ.get('UBICACION_DIRECCION', 'Av. España 2250, Valparaíso')
+
+# Video de YouTube que se muestra en el inicio (vacío para ocultarlo).
+VIDEO_YOUTUBE = os.environ.get('VIDEO_YOUTUBE', 'https://www.youtube.com/watch?v=W5ACjyQuEf0&t=6s')
+
+# Pasarela de pago Webpay Plus (Transbank). Por defecto, ambiente de integración con tarjetas de prueba.
+WEBPAY_AMBIENTE = os.environ.get('WEBPAY_AMBIENTE', 'integracion')
+WEBPAY_CODIGO_COMERCIO = os.environ.get('WEBPAY_CODIGO_COMERCIO', '')
+WEBPAY_API_KEY = os.environ.get('WEBPAY_API_KEY', '')
+if WEBPAY_AMBIENTE == 'produccion' and not (WEBPAY_CODIGO_COMERCIO and WEBPAY_API_KEY):
+    raise ImproperlyConfigured('Para Webpay en producción define WEBPAY_CODIGO_COMERCIO y WEBPAY_API_KEY.')
 
 LOGIN_URL = 'tiendaApp:login'
 LOGIN_REDIRECT_URL = 'tiendaApp:panel'
@@ -220,8 +241,9 @@ SECURE_CSP = {
     'style-src': ["'self'", 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
     'font-src': ["'self'", 'https://fonts.gstatic.com'],
     'img-src': ["'self'", 'data:'],
+    'frame-src': ['https://www.google.com', 'https://www.youtube-nocookie.com'],  # mapa y video
     'connect-src': ["'self'"],
-    'form-action': ["'self'"],
+    'form-action': ["'self'", 'https://webpay3gint.transbank.cl', 'https://webpay3g.transbank.cl'],  # Webpay
     'base-uri': ["'self'"],
     'object-src': ["'none'"],
     'frame-ancestors': ["'none'"],

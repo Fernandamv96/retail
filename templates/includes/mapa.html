@@ -1,0 +1,13 @@
+<section class="panel-card spotlight reveal" data-d="3" aria-labelledby="titulo-mapa">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <p class="eyebrow mb-1"><span class="shiny-text">Dónde estamos</span></p>
+            <h2 id="titulo-mapa" class="mb-1">{{ mapa.nombre }}</h2>
+            <p class="text-secondary mb-0">{{ mapa.direccion }}</p>
+        </div>
+        <a class="btn btn-ghost btn-sm" href="{{ mapa.como_llegar }}" target="_blank" rel="noopener">Cómo llegar ↗</a>
+    </div>
+    <div class="mapa">
+        <iframe src="{{ mapa.embed }}" title="Mapa de {{ mapa.nombre }}, {{ mapa.direccion }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+</section>

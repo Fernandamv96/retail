@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load catalogo %}
 
 {% block title %}{{ servicio.nombre }} | RETAIL{% endblock %}
 
@@ -7,9 +8,12 @@
     <a class="btn btn-ghost btn-sm mb-4" href="{% url 'tiendaApp:servicios' %}">← Volver a servicios</a>
     <article class="panel-card spotlight p-4 p-md-5 reveal">
         <div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
-            <div>
+            <div class="d-flex align-items-center gap-3">
+                {% icono servicio grande=True %}
+                <div>
                 <p class="eyebrow"><span class="shiny-text">Servicio RETAIL</span></p>
                 <h1 data-blur-text>{{ servicio.nombre }}</h1>
+                </div>
             </div>
             <span class="tag tag-ok">Disponible</span>
         </div>

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Ir a pagar | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="panel-card spotlight p-4 p-md-5 text-center">
+                <p class="eyebrow"><span class="shiny-text">Pago seguro</span></p>
+                <h1 class="fs-2 mb-3">Te llevamos a Webpay…</h1>
+                <p>Vas a pagar <strong class="text-white">$ {{ orden.monto|floatformat:"0g" }}</strong> por «{{ orden.descripcion }}».</p>
+                {# efectos.js envía este formulario solo; el botón queda por si el navegador no tiene JavaScript. #}
+                <form method="post" action="{{ url }}" data-autoenviar>
+                    <input type="hidden" name="token_ws" value="{{ token }}">
+                    <button class="btn btn-primary mt-3" type="submit">Continuar a Webpay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

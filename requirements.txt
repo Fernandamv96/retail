@@ -5,3 +5,7 @@ dj-database-url>=2.3
 # Conector de PostgreSQL (Neon). Solo hace falta en el servidor (Vercel, Linux);
 # en local se usa SQLite y no tiene versión para Python free-threaded.
 psycopg[binary]>=3.2; sys_platform == "linux"
+# Necesario para el campo de foto de los productos (ImageField).
+pillow>=11
+# Pasarela de pago Webpay Plus (Transbank).
+transbank-sdk>=6.1,<7

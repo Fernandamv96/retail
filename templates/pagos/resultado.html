@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultado del pago | RETAIL{% endblock %}
+
+{% block content %}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="panel-card spotlight p-4 p-md-5 text-center reveal visible">
+                {% if orden.estado == 'pagada' %}
+                    <div class="card-icon">✓</div>
+                    <h1 class="fs-2 mb-3">¡Pago aprobado!</h1>
+                    <p>Gracias por tu compra de «{{ orden.descripcion }}».</p>
+                    <ul class="mini-list text-start my-4">
+                        <li><span>Orden de compra</span><strong>{{ orden.orden_compra }}</strong></li>
+                        <li><span>Monto</span><strong>$ {{ orden.monto|floatformat:"0g" }}</strong></li>
+                        <li><span>Código de autorización</span><strong>{{ orden.codigo_autorizacion }}</strong></li>
+                        {% if orden.tarjeta %}<li><span>Tarjeta</span><strong>**** {{ orden.tarjeta }}</strong></li>{% endif %}
+                    </ul>
+                {% elif orden.estado == 'anulada' %}
+                    <div class="card-icon card-icon-danger">!</div>
+                    <h1 class="fs-2 mb-3">Pago anulado</h1>
+                    <p>Cancelaste el pago o se agotó el tiempo en Webpay. No se realizó ningún cargo.</p>
+                {% else %}
+                    <div class="card-icon card-icon-danger">!</div>
+                    <h1 class="fs-2 mb-3">Pago rechazado</h1>
+                    <p>Webpay no autorizó la transacción. Puedes intentarlo de nuevo con otra tarjeta.</p>
+                {% endif %}
+                <a class="btn btn-primary mt-2" href="{% url 'tiendaApp:productos' %}">Volver a productos</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

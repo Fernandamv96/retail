@@ -1,0 +1,27 @@
+<div class="card-icon icono-animado icono-tono-{{ tono }}{% if grande %} icono-grande{% endif %}" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        {% if figura == 'brujula' %}
+            <circle cx="12" cy="12" r="9"/><path class="icono-giro" d="M15.5 8.5 13.4 13.4 8.5 15.5 10.6 10.6z"/>
+        {% elif figura == 'codigo' %}
+            <path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path class="icono-pulso" d="m13.5 5-3 14"/>
+        {% elif figura == 'audifonos' %}
+            <path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path class="icono-pulso" d="M10 17h4"/>
+        {% elif figura == 'megafono' %}
+            <path d="M3 10v4h3l7 4V6L6 10z"/><path class="icono-pulso" d="M16.5 9a4 4 0 0 1 0 6"/><path class="icono-pulso icono-retraso" d="M19 6.5a7.5 7.5 0 0 1 0 11"/>
+        {% elif figura == 'pincel' %}
+            <path d="M14 4l6 6-9 9H5v-6z"/><path class="icono-pulso" d="M12 6l6 6"/>
+        {% elif figura == 'codigo_barras' %}
+            <path d="M4 6v12M7 6v12M10 6v12M14 6v12M16 6v12M20 6v12"/><path class="icono-escaneo" d="M2 12h20"/>
+        {% elif figura == 'impresora' %}
+            <path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path class="icono-papel" d="M7 14h10v7H7z"/>
+        {% elif figura == 'caja_dinero' %}
+            <rect x="3" y="11" width="18" height="9" rx="2"/><path d="M3 15h18"/><path class="icono-flota" d="M8 4h8v5H8z"/><circle class="icono-flota" cx="12" cy="6.5" r="1"/>
+        {% elif figura == 'pantalla' %}
+            <rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path class="icono-pulso" d="M7 12l3-3 2 2 4-4"/>
+        {% elif figura == 'caja' %}
+            <path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/><path class="icono-pulso" d="m7.5 5.2 9 4.6"/>
+        {% else %}
+            <path class="icono-giro" d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>
+        {% endif %}
+    </svg>
+</div>

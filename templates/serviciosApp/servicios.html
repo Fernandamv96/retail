@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load catalogo %}
 
 {% block title %}Servicios | RETAIL{% endblock %}
 
@@ -13,7 +14,7 @@
         {% for servicio in servicios %}
             <div class="col-md-6 col-lg-4 reveal" data-d="{{ forloop.counter }}">
                 <article class="info-card spotlight h-100 d-flex flex-column">
-                    <div class="card-icon">✦</div>
+                    {% icono servicio %}
                     <h2>{{ servicio.nombre }}</h2>
                     <p>{{ servicio.descripcion|truncatewords:24 }}</p>
                     <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
@@ -25,7 +26,7 @@
         {% empty %}
             <div class="col-12">
                 <div class="panel-card empty-state">
-                    <div class="card-icon">✦</div>
+                    {% icono None %}
                     <h2>Todavía no hay servicios activos</h2>
                     <p>Vuelve pronto: estamos preparando nuevas soluciones.</p>
                     {% if user.is_authenticated %}<a class="btn btn-primary" href="{% url 'tiendaApp:crear_servicio' %}">+ Crear servicio</a>{% endif %}

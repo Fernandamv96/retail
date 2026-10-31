@@ -10,6 +10,11 @@
         el.style.setProperty('--d', el.dataset.d);
     });
 
+    // Formulario que redirige a Webpay: se envía solo al cargar la página.
+    document.querySelectorAll('form[data-autoenviar]').forEach(function (form) {
+        form.submit();
+    });
+
     // BlurText: divide el texto en palabras que aparecen desde el desenfoque.
     document.querySelectorAll('[data-blur-text]').forEach(function (el) {
         var palabras = el.textContent.trim().split(/\s+/);

@@ -34,6 +34,9 @@
 | 🗂️ **Panel de gestión** | En `/gestion/`: resumen con totales, y para servicios y productos se puede **crear, modificar, eliminar y buscar**. Antes de eliminar se pide confirmación. |
 | ✅ **Validaciones** | ModelForms con mensajes en español: el nombre necesita al menos 3 caracteres y el precio debe ser mayor a 0. |
 | ✉️ **Contacto** | Los mensajes se guardan en la base de datos y se revisan en `/admin/`. Si se configura SMTP, además llegan por correo. |
+| 💳 **Pago con Webpay** | Botón *Comprar con Webpay* en cada producto con stock (Webpay Plus de Transbank). Las órdenes quedan en `/admin/` y el stock baja al aprobarse el pago. Viene en **ambiente de integración**: se paga con la tarjeta de prueba VISA `4051 8856 0044 6623`, CVV `123`, cualquier fecha futura, y en el banco simulado RUT `11.111.111-1` con clave `123`. Para cobrar de verdad: `WEBPAY_AMBIENTE=produccion`, `WEBPAY_CODIGO_COMERCIO` y `WEBPAY_API_KEY`. |
+| 🗺️ **Mapa y video** | El inicio muestra un video de YouTube y un mapa de Google, y la página de contacto también incluye el mapa. Se cambian con las variables `VIDEO_YOUTUBE`, `UBICACION_NOMBRE` y `UBICACION_DIRECCION`. |
+| 📷 **Fotos de productos** | Campo opcional en el panel. En local funciona; en Vercel queda oculto hasta configurar un almacenamiento externo y `FOTOS_PRODUCTOS=True`. |
 | 🔌 **API REST** | `/api/servicios/` en JSON. Lectura pública; para escribir hay que iniciar sesión. |
 | ✨ **Diseño estilo React Bits** | Aurora, BlurText, ShinyText, GradientText, SpotlightCard, CountUp, StarBorder y ClickSpark, escritos en CSS y JavaScript puro, sin React. Se adapta a celular y respeta la opción de *reducir movimiento*. |
 

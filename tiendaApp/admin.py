@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MensajeContacto, Producto, Servicio
+from .models import MensajeContacto, Orden, Producto, Servicio
 
 
 @admin.register(Servicio)
@@ -22,3 +22,11 @@ class MensajeContactoAdmin(admin.ModelAdmin):
 	list_filter = ('leido',)
 	search_fields = ('asunto', 'nombre', 'email', 'mensaje')
 	readonly_fields = ('nombre', 'email', 'asunto', 'mensaje', 'recibido')
+
+
+@admin.register(Orden)
+class OrdenAdmin(admin.ModelAdmin):
+	list_display = ('id', 'descripcion', 'monto', 'estado', 'creada')
+	list_filter = ('estado',)
+	search_fields = ('descripcion', 'codigo_autorizacion')
+	readonly_fields = ('producto', 'descripcion', 'monto', 'estado', 'token', 'codigo_autorizacion', 'tarjeta', 'creada', 'actualizada')

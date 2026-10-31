@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import Producto, Servicio
@@ -57,14 +58,29 @@ class ServicioForm(CatalogoForm):
 
 
 class ProductoForm(CatalogoForm):
+    TAMANO_MAXIMO_FOTO = 2 * 1024 * 1024  # 2 MB
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Sin un almacenamiento persistente (por ejemplo en Vercel) el campo se oculta para no perder fotos.
+        if not settings.FOTOS_PRODUCTOS:
+            del self.fields['imagen']
+
+    def clean_imagen(self):
+        imagen = self.cleaned_data.get('imagen')
+        if imagen and imagen.size > self.TAMANO_MAXIMO_FOTO:
+            raise forms.ValidationError('La foto no puede pesar más de 2 MB.')
+        return imagen
+
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock', 'activo']
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'imagen', 'activo']
         labels = {
             'nombre': 'Nombre',
             'descripcion': 'Descripción',
             'precio': 'Precio',
             'stock': 'Stock',
+            'imagen': 'Foto del producto (opcional)',
             'activo': 'Visible en el sitio',
         }
         widgets = {
@@ -72,5 +88,6 @@ class ProductoForm(CatalogoForm):
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Detalles del producto (opcional)'}),
             'precio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 19990', 'min': '0', 'step': '1'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 25', 'min': '0'}),
+            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'activo': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
         }

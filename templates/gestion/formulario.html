@@ -12,7 +12,7 @@
                 <h1 data-blur-text>{{ titulo }}</h1>
             </div>
 
-            <form method="post" class="panel-card spotlight reveal" novalidate>
+            <form method="post" class="panel-card spotlight reveal" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 {{ form.non_field_errors }}
                 <div class="row g-3">

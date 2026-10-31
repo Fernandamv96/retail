@@ -1,12 +1,18 @@
-from io import StringIO
+import shutil
+import tempfile
+from io import BytesIO, StringIO
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
+from PIL import Image
 
-from .models import MensajeContacto, Producto, Servicio
+from .models import MensajeContacto, Orden, Producto, Servicio
+from .views import _video_youtube
 
 
 class RetailViewsTests(TestCase):
@@ -80,6 +86,24 @@ class RetailViewsTests(TestCase):
 		self.assertContains(response, 'Servicios activos')
 		self.assertContains(response, 'Salir (admin)')
 
+	def test_contacto_muestra_mapa(self):
+		response = self.client.get(reverse('tiendaApp:contacto'))
+		self.assertContains(response, 'https://www.google.com/maps/embed?')
+		self.assertContains(response, 'Av. España 2250, Valparaíso')
+		self.assertContains(response, 'Cómo llegar')
+		self.assertIn('frame-src https://www.google.com', response.headers['Content-Security-Policy'])
+
+	def test_inicio_muestra_video_y_mapa(self):
+		response = self.client.get(reverse('tiendaApp:inicio'))
+		self.assertContains(response, 'https://www.youtube-nocookie.com/embed/W5ACjyQuEf0?start=6')
+		self.assertContains(response, 'https://www.google.com/maps/embed?')
+
+	def test_enlaces_de_youtube(self):
+		self.assertEqual(_video_youtube('https://youtu.be/W5ACjyQuEf0?t=90'), 'https://www.youtube-nocookie.com/embed/W5ACjyQuEf0?start=90')
+		self.assertEqual(_video_youtube('https://www.youtube.com/watch?v=W5ACjyQuEf0'), 'https://www.youtube-nocookie.com/embed/W5ACjyQuEf0?start=0')
+		self.assertIsNone(_video_youtube('https://www.youtube.com/watch?v="><script>'))
+		self.assertIsNone(_video_youtube(''))
+
 	def test_gestion_requiere_login(self):
 		url = reverse('tiendaApp:eliminar_servicio', args=[self.servicio.id])
 		response = self.client.post(url)
@@ -96,6 +120,87 @@ class RetailViewsTests(TestCase):
 
 		response = self.client.post(reverse('tiendaApp:logout'))
 		self.assertRedirects(response, reverse('tiendaApp:inicio'))
+
+
+class PagoWebpayTests(TestCase):
+	def setUp(self):
+		self.producto = Producto.objects.create(nombre='Impresora térmica', precio='89990', stock=3)
+		self.url_pagar = reverse('tiendaApp:pagar_producto', args=[self.producto.id])
+
+	def _iniciar(self):
+		with patch('tiendaApp.views.iniciar_pago', return_value=('https://webpay3gint.transbank.cl/webpayserver/initTransaction', 'tok-123')):
+			return self.client.post(self.url_pagar)
+
+	def test_iniciar_pago_lleva_a_webpay(self):
+		response = self._iniciar()
+		self.assertContains(response, 'action="https://webpay3gint.transbank.cl/webpayserver/initTransaction"')
+		self.assertContains(response, 'value="tok-123"')
+		orden = Orden.objects.get()
+		self.assertEqual((orden.monto, orden.estado, orden.token), (89990, Orden.PENDIENTE, 'tok-123'))
+
+	def test_pagar_requiere_post_y_stock(self):
+		self.assertEqual(self.client.get(self.url_pagar).status_code, 405)
+		self.producto.stock = 0
+		self.producto.save()
+		self.assertRedirects(self._iniciar(), reverse('tiendaApp:productos'))
+		self.assertFalse(Orden.objects.exists())
+
+	def test_pago_aprobado_descuenta_stock(self):
+		self._iniciar()
+		respuesta = {'status': 'AUTHORIZED', 'response_code': 0, 'amount': 89990, 'authorization_code': '1213', 'card_detail': {'card_number': '6623'}}
+		with patch('tiendaApp.views.confirmar_pago', return_value=respuesta) as confirmar:
+			response = self.client.post(reverse('tiendaApp:retorno_pago'), {'token_ws': 'tok-123'})
+			self.client.get(reverse('tiendaApp:retorno_pago'), {'token_ws': 'tok-123'})  # recargar no confirma de nuevo
+		self.assertContains(response, 'Pago aprobado')
+		self.assertEqual(confirmar.call_count, 1)
+		orden = Orden.objects.get()
+		self.assertEqual((orden.estado, orden.codigo_autorizacion, orden.tarjeta), (Orden.PAGADA, '1213', '6623'))
+		self.producto.refresh_from_db()
+		self.assertEqual(self.producto.stock, 2)
+
+	def test_monto_distinto_se_rechaza(self):
+		self._iniciar()
+		respuesta = {'status': 'AUTHORIZED', 'response_code': 0, 'amount': 1}
+		with patch('tiendaApp.views.confirmar_pago', return_value=respuesta):
+			response = self.client.get(reverse('tiendaApp:retorno_pago'), {'token_ws': 'tok-123'})
+		self.assertContains(response, 'Pago rechazado')
+		self.producto.refresh_from_db()
+		self.assertEqual(self.producto.stock, 3)
+
+	def test_pago_anulado_por_el_cliente(self):
+		self._iniciar()
+		response = self.client.post(reverse('tiendaApp:retorno_pago'), {'TBK_TOKEN': 'tok-123', 'TBK_ORDEN_COMPRA': 'RETAIL-1'})
+		self.assertContains(response, 'Pago anulado')
+		self.assertEqual(Orden.objects.get().estado, Orden.ANULADA)
+
+	def test_retorno_con_token_desconocido(self):
+		response = self.client.get(reverse('tiendaApp:retorno_pago'), {'token_ws': 'no-existe'})
+		self.assertEqual(response.status_code, 404)
+
+
+class FotosProductoTests(TestCase):
+	def setUp(self):
+		self.client.force_login(User.objects.create_user('admin', password='clave-segura-123'))
+		self.media = tempfile.mkdtemp()
+		self.addCleanup(shutil.rmtree, self.media, ignore_errors=True)
+
+	def _foto(self):
+		contenido = BytesIO()
+		Image.new('RGB', (8, 8), 'teal').save(contenido, 'PNG')
+		return SimpleUploadedFile('foto.png', contenido.getvalue(), content_type='image/png')
+
+	def test_subir_foto_y_mostrarla_en_el_catalogo(self):
+		datos = {'nombre': 'Lector de códigos', 'precio': '19990', 'stock': '5', 'activo': 'on', 'imagen': self._foto()}
+		with override_settings(MEDIA_ROOT=self.media):
+			response = self.client.post(reverse('tiendaApp:crear_producto'), datos)
+			self.assertRedirects(response, reverse('tiendaApp:gestion_productos'))
+			producto = Producto.objects.get(nombre='Lector de códigos')
+			self.assertContains(self.client.get(reverse('tiendaApp:productos')), producto.imagen.url)
+
+	def test_sin_fotos_activadas_el_campo_no_aparece(self):
+		with override_settings(FOTOS_PRODUCTOS=False):
+			response = self.client.get(reverse('tiendaApp:crear_producto'))
+		self.assertNotContains(response, 'name="imagen"')
 
 
 class GestionCrudTests(TestCase):

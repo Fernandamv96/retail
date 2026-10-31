@@ -35,5 +35,33 @@
             </div>
         </div>
     </section>
+
+    <section class="container pb-5">
+        <div class="row g-4">
+            {% if video %}
+                <div class="col-lg-6">
+                    <section class="panel-card spotlight reveal h-100" data-d="2" aria-labelledby="titulo-video">
+                        <p class="eyebrow mb-1"><span class="shiny-text">Conócenos</span></p>
+                        <h2 id="titulo-video" class="mb-3">Mira cómo trabajamos</h2>
+                        <div class="video">
+                            <iframe src="{{ video }}" title="Video de RETAIL en YouTube" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </section>
+                </div>
+            {% endif %}
+            <div class="{% if video %}col-lg-6{% else %}col-12{% endif %}">
+                {% include 'includes/mapa.html' %}
+            </div>
+        </div>
+
+        <div class="panel-card spotlight reveal mt-4 d-flex flex-wrap justify-content-between align-items-center gap-3" data-d="4">
+            <div>
+                <p class="eyebrow mb-1"><span class="shiny-text">Compra en línea</span></p>
+                <h2 class="mb-1">Paga tus productos con Webpay</h2>
+                <p class="text-secondary mb-0">Tarjetas de débito, crédito y prepago, con la seguridad de Transbank.</p>
+            </div>
+            <span class="star-border"><a class="btn btn-dark-fill" href="{% url 'tiendaApp:productos' %}">Ver productos y comprar</a></span>
+        </div>
+    </section>
 </main>
 {% endblock %}

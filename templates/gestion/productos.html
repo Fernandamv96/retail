@@ -36,9 +36,12 @@
                         <tr>
                             <td data-label="#">{{ forloop.counter }}</td>
                             <td data-label="Producto">
-                                <div>
-                                    <span class="nombre">{{ producto.nombre }}</span>
-                                    {% if producto.descripcion %}<span class="sub">{{ producto.descripcion }}</span>{% endif %}
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if producto.imagen %}<img class="miniatura" src="{{ producto.imagen.url }}" alt="">{% endif %}
+                                    <div>
+                                        <span class="nombre">{{ producto.nombre }}</span>
+                                        {% if producto.descripcion %}<span class="sub">{{ producto.descripcion }}</span>{% endif %}
+                                    </div>
                                 </div>
                             </td>
                             <td data-label="Precio">$ {{ producto.precio|floatformat:"0g" }}</td>
