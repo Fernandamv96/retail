@@ -69,6 +69,17 @@ class RetailViewsTests(TestCase):
 		self.assertContains(response, 'Últimas 4 u.')
 		self.assertNotContains(response, 'Descontinuado')
 
+	def test_inicio_muestra_datos_solo_con_sesion(self):
+		response = self.client.get(reverse('tiendaApp:inicio'))
+		self.assertNotContains(response, 'Servicios activos')
+		self.assertNotContains(response, 'Gestión</a>')
+		self.assertContains(response, reverse('tiendaApp:login'))
+
+		self.client.force_login(User.objects.create_user('admin', password='clave-segura-123'))
+		response = self.client.get(reverse('tiendaApp:inicio'))
+		self.assertContains(response, 'Servicios activos')
+		self.assertContains(response, 'Salir (admin)')
+
 	def test_gestion_requiere_login(self):
 		url = reverse('tiendaApp:eliminar_servicio', args=[self.servicio.id])
 		response = self.client.post(url)

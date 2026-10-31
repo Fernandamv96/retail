@@ -14,11 +14,11 @@ from .serializers import ServicioSerializer
 
 
 def inicio(request):
-	data = {
-		'nombre_tienda': 'RETAIL',
-		'total_servicios': Servicio.objects.filter(activo=True).count(),
-		'total_productos': Producto.objects.filter(activo=True).count(),
-	}
+	data = {'nombre_tienda': 'RETAIL'}
+	# Los totales solo se calculan y muestran a usuarios que ya ingresaron.
+	if request.user.is_authenticated:
+		data['total_servicios'] = Servicio.objects.filter(activo=True).count()
+		data['total_productos'] = Producto.objects.filter(activo=True).count()
 
 	return render(request, 'tiendaApp/inicio.html', {'data': data})
 
